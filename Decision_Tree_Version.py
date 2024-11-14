@@ -19,15 +19,20 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 
 # Παίρνουμε το dataset
 phishing_websites = fetch_ucirepo(id=327) 
-  
+
+data = phishing_websites.data
+
+data = phishing_websites.data.dropna() # Αφαιρούμε τις γραμμές με απουσιάζουσες τιμές
+
 # Αποθηκεύουμε τα χαρακτηριστικά και τις ετικέτες του dataset σε μεταβλητές
-Data_features = phishing_websites.data.features
-Data_target = phishing_websites.data.targets
+X = phishing_websites.data.features
+y = phishing_websites.data.targets
 
-DecisionTree = DecisionTreeClassifier().fit(Data_features, Data_target)
+# Διαχωρίζουμε τα δεδομένα σε training και testing datasets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
-plt.figure(figsize=(13, 8)) # Ορίζουμε μέγεθος γραφήματος
-tree_vis = plot_tree(DecisionTree, filled=True) # Δημιουργούμε γράφημα δέντρου με τα χρώματα να υποδεικνύουν την κατανομή των κλάσεων
+# Δημιουργούμε έναν ταξινομητή δέντρου απόφασης
+DecisionTree = DecisionTreeClassifier(random_state=1)
 
-# Οπτικοποίηση του δέντρου απόφασης
-plt.show()
+#plt.figure(figsize=(13, 8)) # Ορίζουμε μέγεθος γραφήματος
+#tree_vis = plot_tree(DecisionTree, filled=True) # Δημιουργούμε γράφημα δέντρου με τα χρώματα να υποδεικνύουν την κατανομή των κλάσεων
