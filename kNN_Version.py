@@ -30,7 +30,7 @@ X_scaled = Scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
 # Εκπαίδευση του ταξινομητή k-NN
-kNN = KNeighborsClassifier(n_neighbors=5)
+kNN = KNeighborsClassifier(n_neighbors=3)
 
 # Εκπαίδευση του ταξινομητή k-NN
 kNN.fit(X_train, y_train)
@@ -44,7 +44,7 @@ print("Accuracy: ", Accuracy)
 
 # Υπολογισμός της διασταυρούμενης επικύρωσης
 Cross_val_score = cross_val_score(kNN, X_train, y_train, cv=10)
-print("Cross-Validation Score: ", Cross_val_score)
+print("Cross-Validation Score: ", np.mean(Cross_val_score))
 
 # Οπτικοποίηση του πίνακα σύγχυσης
 Confusion_matrix = confusion_matrix(y_test, y_pred)
