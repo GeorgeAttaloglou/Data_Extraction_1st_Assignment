@@ -1,58 +1,106 @@
-import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-from ucimlrepo import fetch_ucirepo 
+from ucimlrepo import fetch_ucirepo  # Για φόρτωση datasets από το UCI Machine Learning Repository
+import pandas as pd  # Για επεξεργασία και ανάλυση δεδομένων
+import numpy as np  # Για αριθμητικούς υπολογισμούς και πίνακες
+import matplotlib.pyplot as plt  # Για γραφική απεικόνιση δεδομένων
+from sklearn.model_selection import train_test_split  # Για διαχωρισμό δεδομένων σε σύνολα εκπαίδευσης και δοκιμής
+from sklearn.model_selection import cross_val_score  # Για διασταυρούμενη επικύρωση
+from sklearn.utils import resample  # Για επαναδειγματοληψία δεδομένων
+from sklearn.tree import DecisionTreeClassifier  # Για ταξινόμηση με δέντρα απόφασης
+from sklearn.model_selection import cross_val_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay  # Για αξιολόγηση μοντέλων μηχανικής μάθησης
 
-def main():
-    # Fetch dataset 
+pd.set_option('display.width', 500) # Ρυθμίζει το πλάτος εμφάνισης των DataFrames στα 500 pixels, επιτρέποντας την καλύτερη ορατότητα των δεδομένων.
+pd.set_option('display.max_columns', 100) # Ορίζει τον μέγιστο αριθμό στηλών που θα εμφανίζονται σε ένα DataFrame κατά την εκτύπωση, σε 100 στήλες.
+pd.set_option('display.notebook_repr_html', True)  # Ρύθμιση εμφάνισης δεδομένων σε HTML μορφή
+
+def main ():
+    # Φόρτωση του dataset
     phishing_websites = fetch_ucirepo(id=327)  # UCI repo dataset ID for phishing websites
-    
-    # Data (as pandas dataframes) 
-    X = phishing_websites.data.features
+
+    #Εισαγωγη των δεδομενων σε panda dataframe
+    x = phishing_websites.data.features
     y = phishing_websites.data.targets
 
-    # Step 1: Check and Remove Missing Values
-    print("Checking for missing values...")
-    print(X.isnull().sum())  # Displays the missing values per column
+    #Ελεγχος για απουσιαζουσες τιμες και διαγραφη τους
+    print ("Checking for missing values and removing them")
+    print(x.isnull().sum()) #Ελέγχει για απουσιάζουσες τιμές στο DataFrame X
+    print(y.isnull().sum()) #Ελέγχει για απουσιάζουσες τιμές στο DataFrame y (αν και δεν θα υπαρχουν)
+    x = x.dropna() #Αφαιρεί τις γραμμές με απουσιάζουσες τιμές από το DataFrame X
 
-    # Remove rows with missing values
-    X = X.dropna()
-    y = y.loc[X.index]  # Keep corresponding target values
-    
-    # Step 2: Encode Categorical Variables
-    # If there are categorical variables, convert them to numeric
-    X = pd.get_dummies(X)  # Converts all categorical variables to numeric (one-hot encoding)
+    #Μετατροπή των κατηγορικών μεταβλητών σε δυαδικές
+    x = pd.get_dummies(x)
 
-    # Step 3: Split data into training and testing sets (80% train, 20% test)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    while True:
+            print ()
+            choice = input("Which algorithm should be used? Decision Trees, K-Nearest Neighbors or exit? (1/2/0):")
 
-    # Step 4: Initialize and train the Decision Tree Classifier
-    clf = DecisionTreeClassifier(random_state=42)
-    clf.fit(X_train, y_train)
+            if choice == '0':
+                print("Exiting program...")
+                break
 
-    # Step 5: Make predictions on the test set
-    y_pred = clf.predict(X_test)
+            elif choice == '1':
+                print("You chose Decision Trees")
 
-    # Step 6: Evaluate the model
-    accuracy = accuracy_score(y_test, y_pred)
-    print("\nModel Accuracy:", accuracy)
-    print("\nClassification Report:")
-    print(classification_report(y_test, y_pred))
+                #Διαχωρισμος των δεδομενων σε training και testing datasets (80% training, 20% testing)
+                x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
-    # Step 7: Confusion Matrix Visualization
-    cm = confusion_matrix(y_test, y_pred)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=clf.classes_)
-    disp.plot(cmap=plt.cm.Blues)
-    plt.title("Confusion Matrix of Phishing Website Classifier")
-    plt.show()
+                #Εκπαιδευση του ταξινομητη DecisionTreeClassifier
+                dt = DecisionTreeClassifier(random_state=1, max_leaf_nodes=10)
+                dt.fit(x_train, y_train)
 
-    
-    print("testing branches")
+                #Δημιουργία πρόβλεψης για το test set
+                y_pred = dt.predict(x_test)
 
-    
- 
-# Call main function
+                #Αξιολόγιση του μοντέλου
+                accuracy = accuracy_score(y_test, y_pred)
+                print("\nModel Accuracy:", accuracy)
+                print("\nClassification Report:")
+                print(classification_report(y_test, y_pred))
+
+                #Δημιουργία ενός confusion matrix για οπτικοποίηση των αποτελεσμάτων
+                cm = confusion_matrix(y_test, y_pred)
+                disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=dt.classes_)
+                disp.plot(cmap=plt.cm.Blues)
+                plt.title("Confusion Matrix of Phishing Website Classifier")
+                plt.show()
+
+            elif choice == '2':
+                print("You chose K-Nearest Neighbors")
+        
+                # Κανονικοποίηση των δεδομένων
+                Scaler = StandardScaler()
+                x_scaled = Scaler.fit_transform(x)
+
+                # Μετατροπή του y σε μονοδιάστατο array (Δημιουργουσε προβλημα το οτι το y ηταν πολυδιαστατος πινακας και οχι μονοδιαστατος)
+                y = y.values.ravel()
+
+                #Διαχωρισμος των δεδομενων σε training και testing datasets (80% training, 20% testing)
+                x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
+
+                #Εκπαιδευση του ταξινομιτη KNN
+                kNN = KNeighborsClassifier(n_neighbors=3)
+                kNN.fit(x_train, y_train)
+
+                #Δημιουργία πρόβλεψης για το test set
+                y_pred = kNN.predict(x_test)
+
+                #Αξιολόγιση του μοντέλου
+                accuracy = accuracy_score(y_test, y_pred)
+                print("\nModel Accuracy:", accuracy)
+                Cross_val_score = cross_val_score(kNN, x_train, y_train, cv=10)
+                print("Cross-Validation Score: ", np.mean(Cross_val_score))
+
+                #Δημιουργία ενός confusion matrix για οπτικοποίηση των αποτελεσμάτων
+                cm = confusion_matrix(y_test, y_pred)
+                disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=kNN.classes_)
+                disp.plot(cmap=plt.cm.Greens)
+                plt.title("Confusion Matrix of Phishing Website Classifier")
+                plt.show()
+
+            else:
+                print("Invalid choice. Please enter 1, 2 or 0.")
+
 if __name__ == "__main__":
     main()
