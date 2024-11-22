@@ -23,6 +23,20 @@ def main ():
     x = phishing_websites.data.features
     y = phishing_websites.data.targets
 
+    # Παρουσίαση του πλήθους των δεδομένων για κάθε κατηγορία
+    category_counts = y.value_counts()
+    print("Number of samples for each category:")
+    print(category_counts)
+
+    # Δημιουργία γραφήματος για το πλήθος των δεδομένων για κάθε κατηγορία
+    plt.figure(figsize=(8, 6))
+    category_counts.plot(kind='bar', color=['green', 'red'])
+    plt.title('Number of Samples for Each Category')
+    plt.xlabel('Category')
+    plt.ylabel('Number of Samples')
+    plt.xticks(ticks=[0, 1], labels=['Legitimate', 'Phishing'], rotation=0)
+    plt.show()
+
     #Ελεγχος για απουσιαζουσες τιμες και διαγραφη τους
     print ("Checking for missing values and removing them")
     print(x.isnull().sum()) #Ελέγχει για απουσιάζουσες τιμές στο DataFrame X
@@ -95,7 +109,7 @@ def main ():
                 #Δημιουργία ενός confusion matrix για οπτικοποίηση των αποτελεσμάτων
                 cm = confusion_matrix(y_test, y_pred)
                 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=kNN.classes_)
-                disp.plot(cmap=plt.cm.Greens)
+                disp.plot(cmap=plt.cm.Blues)
                 plt.title("Confusion Matrix of Phishing Website Classifier")
                 plt.show()
 
