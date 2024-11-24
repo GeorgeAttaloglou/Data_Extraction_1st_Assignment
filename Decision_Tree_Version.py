@@ -19,6 +19,8 @@ y.value_counts().plot(kind='bar', color='skyblue')
 plt.title('Κατανομή κλάσεων')
 plt.xlabel('Ομάδα')
 plt.ylabel('Συχνότητα')
+plt.xticks(ticks=[0, 1], labels=['Νόμιμα', 'Phishing'], rotation=0)
+
 plt.show()
 
 # Διαχωρίζουμε τα δεδομένα σε training και testing datasets
