@@ -57,11 +57,13 @@ def main ():
             elif choice == '1':
                 print("You chose Decision Trees")
 
+                maxleafs = int(input("Enter the maximum number of leaf nodes: "))
+
                 #Διαχωρισμος των δεδομενων σε training και testing datasets (80% training, 20% testing)
                 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
                 #Εκπαιδευση του ταξινομητη DecisionTreeClassifier
-                dt = DecisionTreeClassifier(random_state=1, max_leaf_nodes=10)
+                dt = DecisionTreeClassifier(random_state=1, max_leaf_nodes=maxleafs)
                 dt.fit(x_train, y_train)
 
                 #Δημιουργία πρόβλεψης για το test set
@@ -82,19 +84,21 @@ def main ():
 
             elif choice == '2':
                 print("You chose K-Nearest Neighbors")
+                
+                neighbors = int(input("Enter the number of neighbors: "))
         
                 # Κανονικοποίηση των δεδομένων
                 Scaler = StandardScaler()
                 x_scaled = Scaler.fit_transform(x)
 
                 # Μετατροπή του y σε μονοδιάστατο array (Δημιουργουσε προβλημα το οτι το y ηταν πολυδιαστατος πινακας και οχι μονοδιαστατος)
-                y = y.values.ravel()
+                #y = y.values.ravel()
 
                 #Διαχωρισμος των δεδομενων σε training και testing datasets (80% training, 20% testing)
                 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1)
 
                 #Εκπαιδευση του ταξινομιτη KNN
-                kNN = KNeighborsClassifier(n_neighbors=3)
+                kNN = KNeighborsClassifier(n_neighbors=neighbors)
                 kNN.fit(x_train, y_train)
 
                 #Δημιουργία πρόβλεψης για το test set
