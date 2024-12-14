@@ -1,44 +1,60 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Δεδομένα
-leaf_nodes = [3, 5, 10, 15, 50, 100, 300, 450, 750, 10000]
-accuracies = [
-    0.898236092265943, #3
-    0.898236092265943, #5
-    0.9163274536408865, #10
-    0.9303482587064676, #15
-    0.942107643600181, #50
-    0.9502487562189055, #100
-    0.9574853007688828, #300
-    0.9633649932157394, #450
-    0.9629127091813658, #750
-    0.9629127091813658 #10000
-]
+# Δεδομένα για Max Leaf Nodes
+leaf_nodes = [3, 5, 10, 15, 50, 100, 300, 450, 750, 1000]
+accuracy_leaf = [0.8982, 0.8982, 0.9163, 0.9303, 0.9421, 0.9502, 0.9575, 0.9634, 0.9629, 0.9629]
+precision_leaf = [0.88, 0.88, 0.88, 0.93, 0.94, 0.95, 0.97, 0.96, 0.96, 0.96]
+recall_leaf = [0.90, 0.90, 0.94, 0.92, 0.93, 0.93, 0.94, 0.96, 0.96, 0.96]
+f1_leaf = [0.89, 0.89, 0.91, 0.92, 0.94, 0.94, 0.95, 0.96, 0.96, 0.96]
 
-# Δημιουργία πίνακα
-data = {
-    'Max Leafs': leaf_nodes,
-    'Model Accuracy': accuracies
-}
-df = pd.DataFrame(data)
+# Δεδομένα για Neighbors
+neighbors = [1, 3, 5, 10, 15, 20, 50]
+accuracy_neighbors = [0.89, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96]
+precision_neighbors = [0.87, 0.89, 0.90, 0.92, 0.93, 0.94, 0.95]
+recall_neighbors = [0.88, 0.90, 0.91, 0.93, 0.93, 0.94, 0.96]
+f1_neighbors = [0.87, 0.89, 0.91, 0.92, 0.93, 0.94, 0.95]
 
-# Εμφάνιση πίνακα
-print(df)
+# Accuracy Comparison
+plt.figure()
+plt.plot(leaf_nodes, accuracy_leaf, label="Max Leaf Nodes", marker="o")
+plt.plot(neighbors, accuracy_neighbors, label="Neighbors", marker="s")
+plt.title("Accuracy Comparison")
+plt.xlabel("Parameter Value")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.grid()
+plt.show()
 
-# Δημιουργία γραφήματος
-plt.figure(figsize=(10, 6))
-plt.plot(leaf_nodes, accuracies, marker='o', linestyle='-', color='blue', label='Model Accuracy')
+# Precision Comparison
+plt.figure()
+plt.plot(leaf_nodes, precision_leaf, label="Max Leaf Nodes", marker="o")
+plt.plot(neighbors, precision_neighbors, label="Neighbors", marker="s")
+plt.title("Precision Comparison")
+plt.xlabel("Parameter Value")
+plt.ylabel("Precision")
+plt.legend()
+plt.grid()
+plt.show()
 
-# Διαμόρφωση γραφήματος
-plt.title('Model Accuracy vs. Number of Max Leafs', fontsize=16)
-plt.xlabel('Number of Max Leafs', fontsize=14)
-plt.ylabel('Model Accuracy', fontsize=14)
-plt.xscale('log')  # Λογαριθμική κλίμακα στον άξονα x για καλύτερη απεικόνιση
-plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-plt.xticks(leaf_nodes, labels=leaf_nodes, fontsize=12)
-plt.yticks(fontsize=12)
-plt.legend(fontsize=12)
+# Recall Comparison
+plt.figure()
+plt.plot(leaf_nodes, recall_leaf, label="Max Leaf Nodes", marker="o")
+plt.plot(neighbors, recall_neighbors, label="Neighbors", marker="s")
+plt.title("Recall Comparison")
+plt.xlabel("Parameter Value")
+plt.ylabel("Recall")
+plt.legend()
+plt.grid()
+plt.show()
 
-# Εμφάνιση γραφήματος
+# F1-Score Comparison
+plt.figure()
+plt.plot(leaf_nodes, f1_leaf, label="Max Leaf Nodes", marker="o")
+plt.plot(neighbors, f1_neighbors, label="Neighbors", marker="s")
+plt.title("F1-Score Comparison")
+plt.xlabel("Parameter Value")
+plt.ylabel("F1-Score")
+plt.legend()
+plt.grid()
 plt.show()

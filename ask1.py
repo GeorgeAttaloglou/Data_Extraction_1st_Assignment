@@ -102,7 +102,8 @@ def main():
 
             # Αξιολόγηση του μοντέλου
             accuracy = accuracy_score(y_test, y_pred)
-            print("\nModel Accuracy:", accuracy)
+            print ("\nModel Accuracy:", accuracy)
+            print(classification_report(y_test, y_pred)) 
             Cross_val_score = cross_val_score(kNN, x_train, y_train, cv=10)
             print("Cross-Validation Score: ", np.mean(Cross_val_score))
 
